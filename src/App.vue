@@ -77,5 +77,6 @@ onBeforeUnmount(() => {
   right: -300px;
   width: 500px;
   height: 300px;
+  z-index: 99;
 }
 </style>

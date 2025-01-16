@@ -5,8 +5,8 @@
     </div>
     <ul>
       <li @click="router.push('/')">成品展示</li>
-      <li @click="router.push('/')">图片上传</li>
-      <li @click="router.push('/')">讨论区</li>
+      <li @click="router.push('/uploadview')">图片上传</li>
+      <li @click="router.push('/talkview')">讨论区</li>
       <div class="nav-box"></div>
     </ul>
     <el-tooltip class="box-item" effect="light" content="点我跳转我的b站个人空间哦！" placement="left-start">
