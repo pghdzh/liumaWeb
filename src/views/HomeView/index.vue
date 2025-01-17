@@ -39,35 +39,13 @@ const cardItems = ref([
 <style lang="scss" scoped>
 .cards {
     min-height: 1010px;
-    width: 100vw;
+    width: 100%;
     background: linear-gradient(to bottom right, #91defe, #99c0f9, #bdb6ec, #d7b3e3, #efb3d5, #f9bccc);
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    animation: gradientShift 20s ease-in-out infinite;
 
-    @keyframes gradientShift {
-        0% {
-            background: linear-gradient(to bottom right, #91defe, #99c0f9, #bdb6ec, #d7b3e3, #efb3d5, #f9bccc);
-        }
-
-        25% {
-            background: linear-gradient(to bottom right, #efb3d5, #f9bccc, #91defe, #99c0f9, #bdb6ec, #d7b3e3);
-        }
-
-        50% {
-            background: linear-gradient(to bottom right, #d7b3e3, #efb3d5, #f9bccc, #91defe, #99c0f9, #bdb6ec);
-        }
-
-        75% {
-            background: linear-gradient(to bottom right, #99c0f9, #bdb6ec, #d7b3e3, #efb3d5, #f9bccc, #91defe);
-        }
-
-        100% {
-            background: linear-gradient(to bottom right, #91defe, #99c0f9, #bdb6ec, #d7b3e3, #efb3d5, #f9bccc);
-        }
-    }
 
     .card {
         margin-top: 40px;
@@ -94,10 +72,12 @@ const cardItems = ref([
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
 
             &:hover {
                 transform: scale(1.1);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             }
         }
 
@@ -139,4 +119,50 @@ const cardItems = ref([
         }
     }
 }
+
+/* 通用滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    /* 默认宽度 */
+    background-color: rgba(255, 255, 255, 0.2);
+    /* 背景色透明 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+    /* 内部阴影 */
+    transition: all 0.3s ease-in-out;
+    /* 平滑过渡 */
+}
+
+/* 鼠标悬停时滚动条加宽，滑块颜色加深 */
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* 滚动条背景更浅 */
+    border-radius: 10px;
+}
+
+/* Firefox 定制 */
+::-moz-scrollbar {
+    width: 8px;
+}
+
+::-moz-scrollbar-thumb {
+    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+::-moz-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
+}
+
 </style>
