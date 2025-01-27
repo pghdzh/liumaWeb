@@ -1,6 +1,6 @@
 <template>
     <div class="cards">
-        <div class="card" v-for="(item, index) in cardItems" :key="index">
+        <div class="card" v-for="(item, index) in cardItems" :key="index" :style="getCardStyle(item.ratio)">
             <img :src="item.src" alt="Image" />
             <div class="card-info">
                 <h3>卡片标题 {{ index + 1 }}</h3>
@@ -15,25 +15,47 @@ import { ref } from 'vue';
 
 // 图片数据
 const cardItems = ref([
-    { src: new URL('@/assets/images/07.png', import.meta.url).href },
-    { src: new URL('@/assets/images/02.png', import.meta.url).href },
-    { src: new URL('@/assets/images/03.png', import.meta.url).href },
-    { src: new URL('@/assets/images/04.png', import.meta.url).href },
-    { src: new URL('@/assets/images/05.png', import.meta.url).href },
-    { src: new URL('@/assets/images/06.png', import.meta.url).href },
-    { src: new URL('@/assets/images/07.png', import.meta.url).href },
-    { src: new URL('@/assets/images/02.png', import.meta.url).href },
-    { src: new URL('@/assets/images/03.png', import.meta.url).href },
-    { src: new URL('@/assets/images/04.png', import.meta.url).href },
-    { src: new URL('@/assets/images/05.png', import.meta.url).href },
-    { src: new URL('@/assets/images/06.png', import.meta.url).href },
-    { src: new URL('@/assets/images/07.png', import.meta.url).href },
-    { src: new URL('@/assets/images/02.png', import.meta.url).href },
-    { src: new URL('@/assets/images/03.png', import.meta.url).href },
-    { src: new URL('@/assets/images/04.png', import.meta.url).href },
-    { src: new URL('@/assets/images/05.png', import.meta.url).href },
-    { src: new URL('@/assets/images/06.png', import.meta.url).href },
+    { src: new URL('@/assets/images/01.png', import.meta.url).href, ratio: 1 },
+    { src: new URL('@/assets/images/02.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/03.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/04.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/05.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/06.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/07.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/02.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/03.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/04.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/05.png', import.meta.url).href, ratio: 2 },
+    { src: new URL('@/assets/images/06.png', import.meta.url).href, ratio: 2 },
+
 ]);
+
+
+
+// 动态获取卡片样式
+const getCardStyle = (ratio?: number) => {
+    if (!ratio) {
+        // 提供默认样式，防止图片撑满容器
+        return {
+            width: "480px",
+            height: "270px",
+        };
+    }
+    if (ratio == 1) {
+        // 竖向图片
+        return {
+            width: "151px",
+            height: "270px",
+        };
+    } else {
+        // 横向图片
+        return {
+            width: "480px",
+            height: "270px",
+        };
+    }
+};
+
 </script>
 
 <style lang="scss" scoped>
@@ -48,6 +70,7 @@ const cardItems = ref([
 
 
     .card {
+        margin-right: 20px;
         margin-top: 40px;
         height: 270px;
         width: 480px;
@@ -164,5 +187,4 @@ const cardItems = ref([
 ::-moz-scrollbar-thumb:hover {
     background: linear-gradient(to bottom, #99c0f9, #efb3d5);
 }
-
 </style>

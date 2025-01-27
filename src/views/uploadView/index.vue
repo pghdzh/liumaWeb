@@ -3,8 +3,8 @@
     <!-- 顶部区域 -->
     <div class="topArea">
       <div class="activeNav">
-        <el-tag type="primary" effect="dark">待做</el-tag>
-        <el-tag type="success" effect="dark">待打印</el-tag>
+        <el-tag type="primary" effect="dark" @click="fetchUploadedImages('upload_time')">时间排序</el-tag>
+        <el-tag type="success" effect="dark" @click="fetchUploadedImages('likes')">点赞量排序</el-tag>
       </div>
       <!-- 上传图片组件 -->
       <el-upload class="upload-demo" action="http://localhost:3000/api/images/upload" name="image"
@@ -16,15 +16,22 @@
     <!-- 图片列表展示 -->
     <div class="image-gallery">
       <el-card v-for="(image, index) in uploadedImages" :key="image.id" class="image-card" shadow="hover">
-        <img :src="`http://localhost:3000/${image.file_path}`" class="image" :style="getCardStyle(image.ratio)"
-          @load="handleImageLoad(image, $event)" />
+        <img :src="`http://localhost:3000/${image.file_path}`" class="image" @load="handleImageLoad(image, $event)"
+          :style="getCardStyle(image.ratio)" />
         <div class="info">
+          <div class="infoText">
+            图片描述
+          </div>
           <p class="likes">点赞数：{{ image.likes }}</p>
 
-          <el-button type="primary" @click="likeImage(image.id)">
+        </div>
+        <div class="infoBtn">
+          <el-button type="primary" @click="likeImageFun(image.id)">
             点赞
           </el-button>
-
+          <el-button type="primary">
+            编辑描述
+          </el-button>
         </div>
       </el-card>
     </div>
@@ -67,14 +74,27 @@ const checkFileSize = (file: File) => {
   return isLessThan10MB; // 返回 true 允许上传，返回 false 阻止上传
 };
 // 获取图片列表
-const fetchUploadedImages = async () => {
-  const res = await getImageList();
+const fetchUploadedImages = async (sortBy: any = 'upload_time') => {
+  let params = {
+    sortBy: sortBy
+  }
+  const res = await getImageList(params);
   uploadedImages.value = res.images;
+
+  // 确保每张图片的 ratio 被计算
+  uploadedImages.value.forEach((image) => {
+    const img = new Image();
+    img.src = `http://localhost:3000/${image.file_path}`;
+    img.onload = () => {
+      image.ratio = img.naturalWidth / img.naturalHeight;
+    };
+  });
 };
 
 // 点赞图片
-const likeImage = async (imageId: number) => {
+const likeImageFun = async (imageId: number) => {
   try {
+    console.log('imageId', imageId)
     await likeImage(imageId); // 注意：传递 imageId 参数
     ElMessage.success("点赞成功！");
     fetchUploadedImages(); // 点赞后重新加载图片列表
@@ -92,7 +112,13 @@ const handleImageLoad = (image: Image, event: Event) => {
 
 // 动态获取卡片样式
 const getCardStyle = (ratio?: number) => {
-  if (!ratio) return {};
+  if (!ratio) {
+    // 提供默认样式，防止图片撑满容器
+    return {
+      width: "480px",
+      height: "270px",
+    };
+  }
   if (ratio < 1) {
     // 竖向图片
     return {
@@ -158,7 +184,7 @@ onMounted(() => {
     gap: 20px;
 
     .image-card {
-      position: relative;
+
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -177,6 +203,10 @@ onMounted(() => {
       .info {
         padding: 10px;
         text-align: center;
+
+        .infoText {
+          margin: 10px 0;
+        }
 
         .likes {
           font-size: 16px;
