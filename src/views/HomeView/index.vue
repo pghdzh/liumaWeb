@@ -1,61 +1,48 @@
 <template>
-    <div class="cards">
-        <div class="card" v-for="(item, index) in cardItems" :key="index" :style="getCardStyle(item.ratio)">
-            <img :src="item.src" alt="Image" />
+    <div class="cards" v-infinite-scroll="loadMore">
+        <div class="card" v-for="(item, index) in cardItems" :key="index" :style="getCardStyle(item.orientation)">
+            <img :src="item.image_url" alt="Image" loading="lazy" />
             <div class="card-info">
-                <h3>卡片标题 {{ index + 1 }}</h3>
+                <h3>{{ item.title }}</h3>
                 <button>查看详情</button>
             </div>
         </div>
+
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { getLiumaMediaList } from '@/api/modules/liumaMedia'; // API 请求
 
-// 图片数据
-const cardItems = ref([
-    { src: new URL('@/assets/images/01.png', import.meta.url).href, ratio: 1 },
-    { src: new URL('@/assets/images/02.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/03.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/04.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/05.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/06.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/07.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/02.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/03.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/04.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/05.png', import.meta.url).href, ratio: 2 },
-    { src: new URL('@/assets/images/06.png', import.meta.url).href, ratio: 2 },
+const cardItems = ref<Array<{ image_url: string; orientation: number; title: string }>>([]);
+const currentPage = ref(1);
+const pageSize = 10;
+const total = ref(0);
+const loading = ref(false);
 
-]);
-
-
-
-// 动态获取卡片样式
-const getCardStyle = (ratio?: number) => {
-    if (!ratio) {
-        // 提供默认样式，防止图片撑满容器
-        return {
-            width: "480px",
-            height: "270px",
-        };
-    }
-    if (ratio == 1) {
-        // 竖向图片
-        return {
-            width: "151px",
-            height: "270px",
-        };
-    } else {
-        // 横向图片
-        return {
-            width: "480px",
-            height: "270px",
-        };
-    }
+// 样式映射
+const cardStyleMap = {
+    1: { width: '240px', height: '420px' }, // 竖图
+    0: { width: '480px', height: '270px' }  // 横图
 };
 
+// 动态获取卡片样式
+const getCardStyle = (orientation?: number) => cardStyleMap[orientation ?? 0]; // 默认横图
+
+const loadMore = async () => {
+    if (cardItems.value.length >= total.value && total.value !== 0) return;
+    try {
+        const res = await getLiumaMediaList({ page: currentPage.value, limit: pageSize });
+        if (res.media) {
+            cardItems.value = [...cardItems.value, ...res.media];
+            total.value = res.total;
+            currentPage.value++;
+        }
+    } catch (error) {
+        console.error('加载失败', error);
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -68,12 +55,11 @@ const getCardStyle = (ratio?: number) => {
     flex-wrap: wrap;
     justify-content: space-around;
 
-
     .card {
+        width: 480px;
+        height: 270px;
         margin-right: 20px;
         margin-top: 40px;
-        height: 270px;
-        width: 480px;
         box-sizing: border-box;
         border-radius: 15px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -146,45 +132,21 @@ const getCardStyle = (ratio?: number) => {
 /* 通用滚动条样式 */
 ::-webkit-scrollbar {
     width: 8px;
-    /* 默认宽度 */
-    background-color: rgba(255, 255, 255, 0.2);
-    /* 背景色透明 */
 }
 
 ::-webkit-scrollbar-thumb {
     background: linear-gradient(to bottom, #99c0f9, #efb3d5);
     border-radius: 10px;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
-    /* 内部阴影 */
     transition: all 0.3s ease-in-out;
-    /* 平滑过渡 */
 }
 
-/* 鼠标悬停时滚动条加宽，滑块颜色加深 */
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
     width: 12px;
 }
 
 ::-webkit-scrollbar-track {
     background-color: rgba(255, 255, 255, 0.1);
-    /* 滚动条背景更浅 */
     border-radius: 10px;
-}
-
-/* Firefox 定制 */
-::-moz-scrollbar {
-    width: 8px;
-}
-
-::-moz-scrollbar-thumb {
-    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
-    border-radius: 10px;
-    transition: all 0.3s ease-in-out;
-}
-
-::-moz-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #99c0f9, #efb3d5);
 }
 </style>
