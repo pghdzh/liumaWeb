@@ -4,7 +4,9 @@
             <img :src="item.image_url" alt="Image" loading="lazy" />
             <div class="card-info">
                 <h3>{{ item.title }}</h3>
-                <button>查看详情</button>
+                <a :href="item.video_url" target="_blank">
+                    <button>查看详情</button>
+                </a>
             </div>
         </div>
 
@@ -15,7 +17,7 @@
 import { ref } from 'vue';
 import { getLiumaMediaList } from '@/api/modules/liumaMedia'; // API 请求
 
-const cardItems = ref<Array<{ image_url: string; orientation: number; title: string }>>([]);
+const cardItems = ref<Array<{ image_url: string; orientation: number; title: string; video_url: string }>>([]);
 const currentPage = ref(1);
 const pageSize = 10;
 const total = ref(0);
@@ -66,7 +68,7 @@ const loadMore = async () => {
         transition: all 0.3s ease-in-out;
         transform: scale(1);
         position: relative;
-        overflow: hidden;
+       
         background: white;
         cursor: pointer;
         will-change: transform, box-shadow;
