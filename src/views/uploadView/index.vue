@@ -9,6 +9,13 @@
         <el-tag :class="{ active: sortBy === 'likes' }" type="success" effect="dark"
           @click="changeSort('likes')">点赞量排序</el-tag>
       </div>
+      <!-- 搜索框和按钮 -->
+      <div class="search-area">
+        <el-input v-model="searchQuery" placeholder="搜索图片名称" class="search-input" clearable />
+        <el-button type="primary" @click="searchImages" class="search-btn">
+          搜索
+        </el-button>
+      </div>
     </div>
 
     <!-- 图片列表（无限滚动） -->
@@ -49,6 +56,7 @@ const pageSize = ref(10);
 const sortBy = ref("updated_at");
 const hasMore = ref(true);
 const isLoading = ref(false);
+const searchQuery = ref(''); // 搜索框绑定的值
 
 // 动态卡片样式，根据 orientation 返回对应样式
 const getCardStyle = (orientation?: number) => {
@@ -74,6 +82,7 @@ const fetchAiImage = async (reset = false) => {
       page: currentPage.value,
       limit: pageSize.value,
       sortBy: sortBy.value,
+      search: searchQuery.value, // 将搜索关键字传递给 API
     });
     if (res.code === 200) {
       if (reset) {
@@ -105,6 +114,12 @@ const changeSort = (newSort: string) => {
 // 加载更多数据（v-infinite-scroll 调用）
 const loadMore = () => {
   fetchAiImage();
+};
+
+// 搜索图片（根据搜索框内容触发）
+const searchImages = () => {
+  // 触发分页查询，并将 search 参数传递给后端
+  fetchAiImage(true); // 重置数据，重新加载
 };
 
 const isLiked = (imageId: number) => {
@@ -189,7 +204,7 @@ onMounted(() => {
 
 .topArea {
   display: flex;
-  justify-content: space-between;
+
   padding: 10px 20px;
   background: #fff;
   border-radius: 8px;
@@ -228,6 +243,59 @@ onMounted(() => {
       }
     }
   }
+
+  .search-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+
+    .search-input {
+      width: 60%;
+      max-width: 400px;
+      height: 40px;
+      /* 调整输入框的高度 */
+      padding: 0 10px;
+      /* 添加内边距，确保文字不贴边 */
+      font-size: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      outline: none;
+      transition: all 0.3s ease;
+
+      &:focus {
+        box-shadow: 0 0 8px rgba(0, 100, 255, 0.5);
+        border-color: #4facfe;
+      }
+    }
+
+    .search-btn {
+      margin-left: 10px;
+      height: 40px;
+      /* 确保按钮高度与输入框一致 */
+      padding: 0 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+
 }
 
 .image-gallery {
@@ -316,6 +384,4 @@ onMounted(() => {
   padding: 20px;
   font-size: 16px;
 }
-
-
 </style>
