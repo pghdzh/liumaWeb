@@ -3,8 +3,8 @@
     <!-- 顶部区域 -->
     <div class="topArea">
       <div class="activeNav">
-        <el-tag :class="{ active: sortBy === 'updated_at' }" type="primary" effect="dark"
-          @click="changeSort('updated_at')">时间排序</el-tag>
+        <el-tag :class="{ active: sortBy === 'created_at' }" type="primary" effect="dark"
+          @click="changeSort('created_at')">时间排序</el-tag>
 
         <el-tag :class="{ active: sortBy === 'likes' }" type="success" effect="dark"
           @click="changeSort('likes')">点赞量排序</el-tag>
@@ -53,7 +53,7 @@ import { Loading } from "@element-plus/icons-vue";
 const aiImages = ref<Array<{ id: number; image_path: string; description: string; likes: number; orientation: number }>>([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
-const sortBy = ref("updated_at");
+const sortBy = ref("created_at");
 const hasMore = ref(true);
 const isLoading = ref(false);
 const searchQuery = ref(''); // 搜索框绑定的值
