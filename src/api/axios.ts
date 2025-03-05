@@ -10,7 +10,7 @@ import { ResultData } from "./modules/type";
 
 
 const config: any = {
-  baseURL: import.meta.env.VITE_API_BASE_URL;
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000,
 };
 
