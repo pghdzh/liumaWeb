@@ -254,15 +254,10 @@ onMounted(() => {
       width: 60%;
       max-width: 400px;
       height: 40px;
-      /* 调整输入框的高度 */
-      padding: 0 10px;
-      /* 添加内边距，确保文字不贴边 */
       font-size: 14px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
       outline: none;
-      transition: all 0.3s ease;
 
       &:focus {
         box-shadow: 0 0 8px rgba(0, 100, 255, 0.5);
@@ -347,7 +342,10 @@ onMounted(() => {
     transition: transform 0.3s ease-in-out;
 
     &:hover {
-      transform: rotateY(5deg) scale(1.02);
+      filter:
+        brightness(1.05) contrast(1.1) saturate(1.2);
+      transform: scale(1.02) rotateZ(0.5deg);
+
     }
   }
 

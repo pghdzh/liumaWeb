@@ -7,10 +7,10 @@ import axios, {
 import { ElMessage } from "element-plus";
 import { ResultData } from "./modules/type";
 
-const url1 = "http://localhost:3000";
+
 
 const config: any = {
-  baseURL: url1,
+  baseURL: import.meta.env.VITE_API_BASE_URL;
   timeout: 30000,
 };
 
