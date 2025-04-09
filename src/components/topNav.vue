@@ -13,6 +13,9 @@
       <li @mouseenter="hoverIndex = 1" @mouseleave="hoverIndex = null">
         <router-link to="/uploadview" exact-active-class="active">AI绘图展示</router-link>
       </li>
+      <li @mouseenter="hoverIndex = 2" @mouseleave="hoverIndex = null">
+        <router-link to="/luckydraw" exact-active-class="active">抽奖页面</router-link>
+      </li>
       <!-- 可根据需要添加更多导航项 -->
       <!-- 导航下划线，根据路由激活状态及悬停状态进行动态计算 -->
       <div class="nav-box" :style="{
@@ -58,6 +61,7 @@ const route = useRoute();
 const activeIndex = computed(() => {
   if (route.path === '/') return 0;
   if (route.path === '/uploadview') return 1;
+  if (route.path === '/luckydraw') return 2;
   return 0;
 });
 
@@ -128,7 +132,7 @@ $primary-color: rgb(70, 100, 180);
       position: absolute;
       bottom: 0;
       left: 0;
-      width: calc(100% / 2); // 两个导航项时的宽度
+      width: calc(100% / 3); // 两个导航项时的宽度
       height: 10px;
       border-radius: 2px;
       transition: transform 0.3s ease, background-color 0.3s ease;

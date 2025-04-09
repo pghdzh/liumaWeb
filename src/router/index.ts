@@ -19,6 +19,10 @@ const router = createRouter({
       path: "/talkview",
       component: () => import("../views/TalkView/index.vue"),
     },
+    {
+      path: "/luckydraw",
+      component: () => import("../views/LuckyDraw/index.vue"),
+    },
   ],
 });
 
