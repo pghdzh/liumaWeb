@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { gsap } from 'gsap'
-
+import { getluckyDraw } from '@/api/modules/luckyDraw'
 interface Participant { id: number; name: string; weight: number; color: string }
 
 const raw = Array.from({ length: 10 }, (_, i) => ({
@@ -49,9 +49,27 @@ const lightOpacity = ref(0)
 
 const totalWeight = computed(() => participants.value.reduce((s, p) => s + p.weight, 0))
 
+const getluckyDrawReq = async () => {
+  const res = await getluckyDraw({
+    page: 1,
+    pageSize: 999,
+    sortBy: 'id',
+    order: 'ASC'
+  })
+
+  const data = res.participants  // 接口返回的数组
+  // 根据长度计算色相步长
+  const step = 360 / data.length
+
+  // 给每个参与者分配 color，并赋值给响应式 participants
+  participants.value = data.map((p, i) => ({
+    ...p,
+    color: `hsl(${i * step}deg, 70%, 60%)`
+  }))
+}
+
 onMounted(() => {
-  const step = 360 / raw.length
-  participants.value = raw.map((p, i) => ({ ...p, color: `hsl(${i * step}deg,70%,60%)` }))
+  getluckyDrawReq()
 })
 
 const wheelGradient = computed(() => {
